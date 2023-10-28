@@ -8,7 +8,20 @@ import (
 )
 
 func (app *application) createItemHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "create a new item")
+	var input struct {
+		Name       string   `json:"name"`
+		Case       int32    `json:"case"`
+		Rarity     int32    `json:"rarity"`
+		Conditions []string `json:"conditions"`
+	}
+
+	err := app.readJSON(w, r, &input)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	fmt.Fprintf(w, "%+v\n", input)
 }
 
 func (app *application) showItemHandler(w http.ResponseWriter, r *http.Request) {
